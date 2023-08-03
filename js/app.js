@@ -14,30 +14,35 @@ listTask.forEach(element => {
 });
 
 if (listElement.childElementCount === 0) {
-  listElement.innerHTML = '<div class="error"> Você está sem tarefas no momento.</div>'
+  listElement.innerHTML = '<div class="error"> Você não tem tarefas no momento.</div>'
 }
 
 btnAdd.addEventListener('click', (event) => {
   event.preventDefault();
-
   const inputAdd = document.querySelector('.info-content-input-add')
-  const currentItem = {
-    task: inputAdd.value,
-    id: countID
+
+  if (inputAdd.value < 1) {
+    alert("Por favor, insira uma tarefa!")
+  } else {
+
+    const currentItem = {
+      task: inputAdd.value,
+      id: countID
+    }
+
+    creatNewElement(currentItem.task, currentItem.id)
+
+    listTask.push(currentItem)
+
+    localStorage.setItem('item', JSON.stringify(listTask))
+
+    inputAdd.value = ''
+
+    countID++;
+
   }
 
-  creatNewElement(currentItem.task, currentItem.id)
-
-  listTask.push(currentItem)
-
-  localStorage.setItem('item', JSON.stringify(listTask))
-
-  inputAdd.value = ''
-
-  countID++;
-
 })
-
 
 function creatNewElement(element, id) {
   const task = document.createElement('li');
