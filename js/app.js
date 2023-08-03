@@ -2,29 +2,31 @@ import {
   date
 } from "./date.js";
 
-
 const btnAdd = document.querySelector('#btn-add');
+const inputAdd = document.querySelector('.info-content-input-add')
 const listElement = document.querySelector('ul');
 const listTask = JSON.parse(localStorage.getItem('item')) || [];
-let countID = date.getTime()
+const message = document.querySelector('#msg')
+let countID = date.getTime();
 
+function isEmpty() {
+  if (listTask.length === 0) {
+    message.style.display = 'block';
+  } else {
+    message.style.display = 'none';
+  }
+}
 
 listTask.forEach(element => {
   creatNewElement(element.task, element.id)
 });
 
-if (listElement.childElementCount === 0) {
-  listElement.innerHTML = '<div class="error"> Você não tem tarefas no momento.</div>'
-}
-
 btnAdd.addEventListener('click', (event) => {
   event.preventDefault();
-  const inputAdd = document.querySelector('.info-content-input-add')
 
-  if (inputAdd.value < 1) {
-    alert("Por favor, insira uma tarefa!")
+  if (inputAdd.value.trim().length === 0) {
+    alert('Por gentileza, digite uma tarefa!');
   } else {
-
     const currentItem = {
       task: inputAdd.value,
       id: countID
@@ -39,15 +41,13 @@ btnAdd.addEventListener('click', (event) => {
     inputAdd.value = ''
 
     countID++;
-
+    isEmpty();
   }
-
-})
+});
 
 function creatNewElement(element, id) {
   const task = document.createElement('li');
   task.classList.add('task');
-
 
   task.addEventListener('click', () => {
     task.classList.toggle('completed');
@@ -71,10 +71,11 @@ function creatNewElement(element, id) {
   listElement.append(task);
 }
 
-
-
-function deleteElement(element, id) {
-  element.remove()
-  listTask.splice(listTask.findIndex((element) => element.id === id), 1);
+function deleteElement(taskElement, taskId) {
+  taskElement.remove();
+  listTask.splice(listTask.findIndex((item) => item.id === taskId), 1);
   localStorage.setItem('item', JSON.stringify(listTask));
+  isEmpty();
 }
+
+isEmpty();
